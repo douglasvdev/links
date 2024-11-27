@@ -1,21 +1,36 @@
-import { FlatList, Image, Modal, Text, TouchableOpacity, View } from "react-native"
+import { useEffect, useState } from "react"
+import { Alert, FlatList, Image, Modal, Text, TouchableOpacity, View } from "react-native"
 import { MaterialIcons } from "@expo/vector-icons"
 import { router } from "expo-router"
 
 import { styles } from "./styles"
 import { colors } from "@/styles/colors"
+import { categories } from "@/utils/categories"
+import { LinkStorage, linkStorage } from "@/storage/link-storage"
 
 import { Link } from "@/components/link"
-import { Categories } from "@/components/categories"
 import { Option } from "@/components/option"
-import { useState } from "react"
-import { categories } from "@/utils/categories"
+import { Categories } from "@/components/categories"
 
 // import { Category } from "@/components/category"
-// import { categories } from "@/utils/categories"
 
 export default function Index(){
+    const [links, setLinks] = useState<LinkStorage[]>([]);
     const [category, setCategory] = useState(categories[0].name);
+
+    async function getLinks() {
+        try {
+            const response = await linkStorage.get();
+            setLinks(response);
+        } catch (error) {
+            Alert.alert("Erro", "Não foi possível listar os links");
+        }
+    }
+
+    useEffect(() => {
+        getLinks()
+        console.log("CHAMOU!")
+    }, [category])
 
     return (
         <View style={styles.container}>
@@ -31,10 +46,10 @@ export default function Index(){
 
             
             <FlatList 
-                data={["1", "2", "3", "4"]} 
-                keyExtractor={(item) => item} 
-                renderItem={() => (
-                    <Link name="RocketSeat" url="https://www.rocketseat.com.br/" onDetails={() => console.log("Clicou!!")}/>
+                data={links} 
+                keyExtractor={(item) => item.id} 
+                renderItem={({ item }) => (
+                    <Link name={item.name} url={item.url} onDetails={() => console.log("Clicou!!")}/>
                 )}
                 style={styles.links}
                 contentContainerStyle={styles.linksContent}

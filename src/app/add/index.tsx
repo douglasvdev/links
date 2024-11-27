@@ -9,26 +9,42 @@ import { router } from "expo-router";
 import { Categories } from "@/components/categories";
 import { Input } from "@/components/input";
 import { Button } from "@/components/button";
+import { linkStorage } from "@/storage/link-storage";
 
 export default function Add() {
     const [category, setCategory] = useState("");
-    const [nome, setNome] = useState("");
+    const [name, setName] = useState("");
     const [url, setUrl] = useState("");
 
-    function handleAdd(){
-        if (!category) {
-            return Alert.alert("Categoria", "Seleciona a categoria!");
-        }
+    async function handleAdd(){
+        try {
+            if (!category) {
+                return Alert.alert("Categoria", "Seleciona a categoria!");
+            }
+    
+            if (!name.trim()) {
+                return Alert.alert("Nome", "Informe o nome!");
+            }
+    
+            if (!url.trim()) {
+                return Alert.alert("Url", "Informe a URL!");
+            }
 
-        if (!nome.trim()) {
-            return Alert.alert("Nome", "Informe o nome!");
+            await linkStorage.save({
+                id: new Date().getTime().toString(),
+                name,
+                url,
+                category,
+            })
+    
+            // const data = await linkStorage.get();
+            // console.log(data);
+            
+            // console.log({category, nome, url});
+        } catch (error) {
+            Alert.alert("Erro", "Não foi possível salvar o link");
+            console.log(error);
         }
-
-        if (!url.trim()) {
-            return Alert.alert("Url", "Informe a URL!");
-        }
-
-        console.log({category, nome, url})
     }
 
     return (
@@ -47,8 +63,8 @@ export default function Add() {
 
             <View style={styles.form}>
                 {/* <Input placeholder="Nome" onChangeText={(valor) => console.log(valor)}/> */}
-                <Input placeholder="Nome" onChangeText={setNome}/>
-                <Input placeholder="Url" onChangeText={setUrl} autoCorrect={false} />
+                <Input placeholder="Nome" onChangeText={setName}/>
+                <Input placeholder="Url" onChangeText={setUrl} autoCorrect={false} autoCapitalize="none" />
                 <Button title="Adicionar" onPress={handleAdd}/>
             </View>
 
