@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { Alert, FlatList, Image, Modal, Text, TouchableOpacity, View } from "react-native"
 import { MaterialIcons } from "@expo/vector-icons"
-import { router } from "expo-router"
+import { router, useFocusEffect } from "expo-router"
 
 import { styles } from "./styles"
 import { colors } from "@/styles/colors"
@@ -27,10 +27,14 @@ export default function Index(){
         }
     }
 
-    useEffect(() => {
+    /*useEffect(() => {
         getLinks()
         console.log("CHAMOU!")
-    }, [category])
+    }, [category]);*/
+
+    useFocusEffect(useCallback(() => {
+        getLinks();
+    }, []));
 
     return (
         <View style={styles.container}>

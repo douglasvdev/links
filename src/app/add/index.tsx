@@ -36,11 +36,7 @@ export default function Add() {
                 url,
                 category,
             })
-    
-            // const data = await linkStorage.get();
-            // console.log(data);
             
-            // console.log({category, nome, url});
         } catch (error) {
             Alert.alert("Erro", "Não foi possível salvar o link");
             console.log(error);
