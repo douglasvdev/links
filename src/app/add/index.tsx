@@ -36,7 +36,10 @@ export default function Add() {
                 url,
                 category,
             })
-            
+            Alert.alert("Sucesso", "Novo link adicionado", [{
+                text: "Ok",
+                onPress: () => router.back(),
+            }])
         } catch (error) {
             Alert.alert("Erro", "Não foi possível salvar o link");
             console.log(error);
@@ -58,7 +61,6 @@ export default function Add() {
             <Categories onChange={setCategory} selected={category}/>
 
             <View style={styles.form}>
-                {/* <Input placeholder="Nome" onChangeText={(valor) => console.log(valor)}/> */}
                 <Input placeholder="Nome" onChangeText={setName}/>
                 <Input placeholder="Url" onChangeText={setUrl} autoCorrect={false} autoCapitalize="none" />
                 <Button title="Adicionar" onPress={handleAdd}/>
